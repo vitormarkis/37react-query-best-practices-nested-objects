@@ -1,5 +1,5 @@
 import { UserSession } from "@/interfaces/UserSession"
-import { ECacheKeys } from "@/pages/keys"
+import { ECacheKeys } from "@/keys"
 import { DefaultError, useMutation, useQueryClient } from "@tanstack/react-query"
 import { produce } from "immer"
 import { HttpRequestRemoveColumnPayload, httpRequestRemoveColumn } from "./httpRequest"
@@ -13,7 +13,7 @@ export function useRemoveColumnMutation({ columnId, userId }: UseRemoveColumnMut
   const queryClient = useQueryClient()
 
   return useMutation<unknown, DefaultError, HttpRequestRemoveColumnPayload>({
-    mutationKey: ECacheKeys.mutation.removeColumn,
+    mutationKey: ECacheKeys.mutation.removeColumn(columnId),
     mutationFn: (...args) => httpRequestRemoveColumn(...args),
     onSuccess() {
       queryClient.setQueryData<UserSession>(ECacheKeys.user(userId), userSession => {

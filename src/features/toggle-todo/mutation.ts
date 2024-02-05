@@ -1,5 +1,5 @@
 import { TodoSession, UserSession } from "@/interfaces/UserSession"
-import { ECacheKeys } from "@/pages/keys"
+import { ECacheKeys } from "@/keys"
 import { DefaultError, useMutation, useQueryClient } from "@tanstack/react-query"
 import { produce } from "immer"
 import { HttpRequestToggleTodoPayload, httpRequestToggleTodo } from "./httpRequest"

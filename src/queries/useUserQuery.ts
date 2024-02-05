@@ -1,15 +1,16 @@
 import { getColumn } from "@/gateway/columns"
 import { ColumnSessionAPI, UserSession, UserSessionAPI } from "@/interfaces/UserSession"
-import { ECacheKeys } from "@/pages/keys"
+import { ECacheKeys } from "@/keys"
 import { api } from "@/services/api"
 import { useQuery } from "@tanstack/react-query"
+import { useDebugValue } from "react"
 
 type UseUserQueryProps = {
   userId: string
 }
 
 export function useUserQuery({ userId }: UseUserQueryProps) {
-  return useQuery<UserSession>({
+  const query = useQuery<UserSession>({
     queryKey: ECacheKeys.user(userId),
     async queryFn() {
       const [userAPI, columnsListAPI] = await Promise.all([
@@ -33,4 +34,6 @@ export function useUserQuery({ userId }: UseUserQueryProps) {
     staleTime: Infinity,
     refetchOnWindowFocus: false,
   })
+  useDebugValue(query)
+  return query
 }

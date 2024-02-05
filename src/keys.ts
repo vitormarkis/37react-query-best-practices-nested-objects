@@ -5,6 +5,6 @@ export const ECacheKeys = {
     addTodo: (columnId: string) => ["ADD-TODO", columnId],
     toggleTodo: (columnId: string) => ["TOGGLE-TODO", columnId],
     clearTodoList: (columnId: string) => ["CLEAR-TODO-LIST", columnId],
-    removeColumn: ["REMOVE-COLUMN"],
+    removeColumn: (columnId: string) => ["REMOVE-COLUMN", columnId],
   },
 }
