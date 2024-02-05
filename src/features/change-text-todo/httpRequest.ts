@@ -2,20 +2,20 @@ import { TodoSession } from "@/interfaces/UserSession"
 import { api } from "@/services/api"
 import { sleep } from "@/utils/sleep"
 
-export type HttpRequestToggleTodoPayload = {
+export type HttpRequestChangeTextTodoPayload = {
   payload: {
     todoId: string
     userId: string
   }
-  body: HttpRequestToggleTodoBody
+  body: HttpRequestChangeTextTodoBody
 }
 
-type HttpRequestToggleTodoBody = {
-  isDone: boolean
+type HttpRequestChangeTextTodoBody = {
+  text: string
 }
 
-export async function httpRequestToggleTodo({ body, payload }: HttpRequestToggleTodoPayload) {
-  await sleep(1.5)
+export async function httpRequestChangeTextTodo({ body, payload }: HttpRequestChangeTextTodoPayload) {
+  await sleep(5)
   const response = await api.patch<TodoSession>(`/todos/${payload.todoId}`, body)
   return response.data
 }

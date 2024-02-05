@@ -2,6 +2,7 @@ import { Button } from "@/components/button"
 import { IconBrush } from "@/components/icons/IconBrush"
 import { IconX } from "@/components/icons/IconX"
 import { Todo } from "@/components/todo"
+import { ColumnProvider, useColumn } from "@/entities/column/hooks/useColumn"
 import { HttpRequestAddTodoPayload } from "@/features/add-todo/httpRequest"
 import { useAddTodoMutation } from "@/features/add-todo/mutation"
 import { HttpRequestClearTodoListPayload } from "@/features/clear-todo-list/httpRequest"
@@ -12,15 +13,15 @@ import { ColumnSession } from "@/interfaces/UserSession"
 import { cn } from "@/lib/utils"
 import React, { memo } from "react"
 import { toast } from "sonner"
+import { userId } from "@/pages"
 import _ from "lodash"
 
 export type ColumnProps = React.ComponentPropsWithoutRef<"div"> & {
   column: ColumnSession
-  userId: string
 }
 
 const Column = React.forwardRef<React.ElementRef<"div">, ColumnProps>(function ColumnComponent(
-  { userId, column, className, ...props },
+  { column, className, ...props },
   ref,
 ) {
   const addTodoMutation = useAddTodoMutation({
@@ -40,6 +41,7 @@ const Column = React.forwardRef<React.ElementRef<"div">, ColumnProps>(function C
       },
     }
 
+    console.log("calling addTodoMutation.mutateAsync, should be pending")
     const response = await addTodoMutation.mutateAsync(input)
     console.log({ response })
     toast.success("Todo adicionado.")
@@ -78,65 +80,69 @@ const Column = React.forwardRef<React.ElementRef<"div">, ColumnProps>(function C
   }
 
   return (
-    <div
-      {...props}
-      className={cn("flex flex-col p-0.5 bg-zinc-800 min-w-[11rem]", className)}
-      ref={ref}
-    >
-      <div className="pl-2 flex">
-        <div>
-          <span className="text-sm">{column.id.slice(0, 6)}...</span>
+    <ColumnProvider column={column}>
+      <div
+        {...props}
+        className={cn("flex flex-col p-0.5 bg-zinc-800 min-w-[13rem]", className)}
+        ref={ref}
+      >
+        <div className="pl-2 flex">
+          <div>
+            <span className="text-sm">{column.id.slice(0, 6)}...</span>
+          </div>
+          <div className="ml-auto flex gap-1">
+            <Button
+              disabled={clearTodoListMutation.isPending}
+              onClick={handleClearTodoList}
+              size="icon"
+            >
+              <IconBrush className="size-3" />
+            </Button>
+            <Button
+              disabled={removeColumnMutation.isPending}
+              onClick={handleRemoveColumn}
+              size="icon"
+              color="destructive"
+            >
+              <IconX className="size-3" />
+            </Button>
+          </div>
         </div>
-        <div className="ml-auto flex gap-1">
-          <Button
-            disabled={clearTodoListMutation.isPending}
-            onClick={handleClearTodoList}
-            size="icon"
-          >
-            <IconBrush className="size-3" />
-          </Button>
-          <Button
-            disabled={removeColumnMutation.isPending}
-            onClick={handleRemoveColumn}
-            size="icon"
-            color="destructive"
-          >
-            <IconX className="size-3" />
-          </Button>
+        <div className="pt-0.5">
+          {column.todos.length > 0 ? (
+            column.todos.map(todo => (
+              <Todo
+                userId={userId}
+                key={todo.id}
+                todo={todo}
+              />
+            ))
+          ) : (
+            <span className="text-sm font-bold text-zinc-600 px-2">No todos...</span>
+          )}
+        </div>
+        <div className="mt-auto">
+          <div className="pt-1">
+            <Button
+              disabled={addTodoMutation.isPending}
+              onClick={handleAddTodo}
+              variant="todo-list"
+              color="colorless"
+            >
+              Add Todo
+            </Button>
+          </div>
         </div>
       </div>
-      <div className="pt-0.5">
-        {column.todos.length > 0 ? (
-          column.todos.map(todo => (
-            <Todo
-              userId={userId}
-              key={todo.id}
-              todo={todo}
-            />
-          ))
-        ) : (
-          <span className="text-sm font-bold text-zinc-600 px-2">No todos...</span>
-        )}
-      </div>
-      <div className="mt-auto">
-        <div className="pt-1">
-          <Button
-            disabled={addTodoMutation.isPending}
-            onClick={handleAddTodo}
-            variant="todo-list"
-            color="rose"
-          >
-            Add Todo
-          </Button>
-        </div>
-      </div>
-    </div>
+    </ColumnProvider>
   )
 })
 
 Column.displayName = "Column"
 
 const memoColumn = memo(Column, (prev, next) => {
-  return _.isEqual(prev, next)
+  return _.isEqual(prev.column, next.column)
 })
+
 export { memoColumn as Column }
+// export { Column }

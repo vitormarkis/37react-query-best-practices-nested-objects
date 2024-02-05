@@ -17,7 +17,7 @@ type HttpRequestAddTodoBody = {
 }
 
 export async function httpRequestAddTodo(payload: HttpRequestAddTodoPayload) {
-  await sleep(1)
+  await sleep(0.3)
   const response = await api.post<TodoSession>(`/todos`, payload.body)
   return response.data
 }

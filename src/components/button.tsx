@@ -8,12 +8,14 @@ export const buttonVariants = tv(
       size: {
         default: "",
         icon: "h-6 w-6 p-0 grid place-items-center",
+        sm: "h-7 text-xs",
       },
       variant: {
         default: "",
         "todo-list": "h-9 w-full",
       },
       color: {
+        colorless: "bg-black/25 hover:bg-white/5 disabled:bg-zinc-900",
         amber: "bg-amber-600 hover:bg-amber-700 disabled:bg-amber-800",
         rose: "bg-rose-600 hover:bg-rose-700 disabled:bg-rose-800",
         destructive: "bg-red-500 hover:bg-red-600 disabled:bg-red-700",
@@ -21,7 +23,7 @@ export const buttonVariants = tv(
     },
     defaultVariants: {
       variant: "default",
-      color: "amber",
+      color: "colorless",
     },
   },
   {

@@ -3,7 +3,9 @@
 @tailwind utilities;
 
 @layer {
-  * {
+
+  #root *,
+  [role="dialog"] * {
     transition-property: all;
     transition-duration: 300ms;
   }

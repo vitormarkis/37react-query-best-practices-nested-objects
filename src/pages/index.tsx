@@ -1,14 +1,14 @@
 import { Button } from "@/components/button"
+import { Column } from "@/components/column"
 import { cn } from "@/lib/utils"
 import { useUserQuery } from "@/queries/useUserQuery"
 import { Inter } from "next/font/google"
-import React, { useDebugValue } from "react"
+import React from "react"
 import { toast } from "sonner"
 import { HttpRequestAddColumnPayload } from "../features/add-column/httpRequest"
 import { useAddColumnMutation } from "../features/add-column/mutation"
-import { Column } from "@/components/column"
 
-const userId = "ef499b10-d774-4a13-b585-7e29541430cc"
+export const userId = "ef499b10-d774-4a13-b585-7e29541430cc"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -38,6 +38,7 @@ export default function Home() {
         <Button
           disabled={addColumnMutation.isPending}
           onClick={handleAddColumn}
+          color="amber"
         >
           Add Column
         </Button>
@@ -67,9 +68,8 @@ export const ColumnList = React.forwardRef<React.ElementRef<"div">, ColumnListPr
       >
         {user.columns.map(column => (
           <Column
-            userId={userId}
-            key={column.id}
             column={column}
+            key={column.id}
           />
         ))}
       </div>

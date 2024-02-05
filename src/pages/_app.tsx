@@ -10,7 +10,9 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Component {...pageProps} />
+      <div id="root">
+        <Component {...pageProps} />
+      </div>
       <Toaster />
       <ReactQueryDevtools
         initialIsOpen={false}
