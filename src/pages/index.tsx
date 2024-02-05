@@ -1,118 +1,259 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
+import { ColumnSession, TodoSession } from "@/interfaces/UserSession"
+import { cn } from "@/lib/utils"
+import { useUserQuery } from "@/queries/useUserQuery"
+import * as Checkbox from "@radix-ui/react-checkbox"
+import { CheckIcon } from "@radix-ui/react-icons"
+import { Inter } from "next/font/google"
+import React from "react"
+import { toast } from "sonner"
+import { HttpRequestAddColumnPayload } from "../features/add-column/httpRequest"
+import { useAddColumnMutation } from "../features/add-column/mutation"
+import { Button } from "@/components/button"
+import { HttpRequestAddTodoPayload } from "@/features/add-todo/httpRequest"
+import { useAddTodoMutation } from "@/features/add-todo/mutation"
+import { useToggleTodoMutation } from "@/features/toggle-todo/mutation"
+import { HttpRequestToggleTodoPayload } from "@/features/toggle-todo/httpRequest"
+import { IconBrush } from "@/components/icons/IconBrush"
+import { useClearTodoListMutation } from "@/features/clear-todo-list/mutation"
+import { HttpRequestClearTodoListPayload } from "@/features/clear-todo-list/httpRequest"
+import { IconX } from "@/components/icons/IconX"
+import { useRemoveColumnMutation } from "@/features/remove-column/mutation"
+import { HttpRequestRemoveColumnPayload } from "@/features/remove-column/httpRequest"
 
-const inter = Inter({ subsets: ['latin'] })
+const userId = "ef499b10-d774-4a13-b585-7e29541430cc"
+
+const inter = Inter({ subsets: ["latin"] })
 
 export default function Home() {
+  const { data: user } = useUserQuery({ userId })
+
+  const addColumnMutation = useAddColumnMutation({
+    userId,
+  })
+
+  if (!user) {
+    return <div>Loading...</div>
+  }
+
+  const handleAddColumn = async () => {
+    const input: HttpRequestAddColumnPayload = {
+      id: crypto.randomUUID(),
+      todos: [],
+      idOwner: userId,
+    }
+
+    const response = await addColumnMutation.mutateAsync(input)
+    console.log({ response })
+    toast.success("Coluna adicionada.")
+  }
+
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/pages/index.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
+    <main className={cn("", inter.className)}>
+      <Container>
+        <h1>Todos</h1>
+      </Container>
+      <Container className="mt-6">
+        <Button
+          disabled={addColumnMutation.isPending}
+          onClick={handleAddColumn}
         >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+          Add Column
+        </Button>
+      </Container>
+      <Container className="flex flex-wrap gap-8 mt-6">
+        {user.columns.map(column => (
+          <Column
+            key={column.id}
+            column={column}
+          />
+        ))}
+      </Container>
     </main>
   )
 }
+
+export type ColumnProps = React.ComponentPropsWithoutRef<"div"> & {
+  column: ColumnSession
+}
+
+export const Column = React.forwardRef<React.ElementRef<"div">, ColumnProps>(function ColumnComponent(
+  { column, className, ...props },
+  ref,
+) {
+  const addTodoMutation = useAddTodoMutation({
+    columnId: column.id,
+  })
+
+  const handleAddTodo = async () => {
+    const input: HttpRequestAddTodoPayload = {
+      body: {
+        id: crypto.randomUUID(),
+        idColumn: column.id,
+        isDone: false,
+        text: Math.random().toString(36).substring(0, 14),
+      },
+      payload: {
+        userId,
+      },
+    }
+
+    const response = await addTodoMutation.mutateAsync(input)
+    console.log({ response })
+    toast.success("Todo adicionado.")
+  }
+
+  const clearTodoListMutation = useClearTodoListMutation({
+    columnId: column.id,
+  })
+
+  const handleClearTodoList = async () => {
+    const input: HttpRequestClearTodoListPayload = {
+      payload: {
+        columnId: column.id,
+        userId,
+      },
+    }
+
+    const response = await clearTodoListMutation.mutateAsync(input)
+    console.log({ response })
+    toast.success("Coluna limpa.")
+  }
+
+  const removeColumnMutation = useRemoveColumnMutation({
+    columnId: column.id,
+    userId,
+  })
+
+  const handleRemoveColumn = async () => {
+    const input: HttpRequestRemoveColumnPayload = {
+      idColumn: column.id,
+    }
+
+    const response = await removeColumnMutation.mutateAsync(input)
+    console.log({ response })
+    toast.success("Coluna removida.")
+  }
+
+  return (
+    <div
+      {...props}
+      className={cn("flex flex-col p-0.5 bg-zinc-800 min-w-[11rem]", className)}
+      ref={ref}
+    >
+      <div className="pl-2 flex">
+        <div>
+          <span className="text-sm">{column.id.slice(0, 6)}...</span>
+        </div>
+        <div className="ml-auto flex gap-1">
+          <Button
+            disabled={clearTodoListMutation.isPending}
+            onClick={handleClearTodoList}
+            size="icon"
+          >
+            <IconBrush className="size-3" />
+          </Button>
+          <Button
+            disabled={removeColumnMutation.isPending}
+            onClick={handleRemoveColumn}
+            size="icon"
+            color="destructive"
+          >
+            <IconX className="size-3" />
+          </Button>
+        </div>
+      </div>
+      <div className="pt-0.5">
+        {column.todos.length > 0 ? (
+          column.todos.map(todo => (
+            <Todo
+              key={todo.id}
+              todo={todo}
+            />
+          ))
+        ) : (
+          <span className="text-sm font-bold text-zinc-600 px-2">No todos...</span>
+        )}
+      </div>
+      <div className="mt-auto">
+        <div className="pt-1">
+          <Button
+            disabled={addTodoMutation.isPending}
+            onClick={handleAddTodo}
+            variant="todo-list"
+            color="rose"
+          >
+            Add Todo
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+})
+
+Column.displayName = "Column"
+
+export type TodoProps = React.ComponentPropsWithoutRef<"div"> & {
+  todo: TodoSession
+}
+
+export const Todo = React.forwardRef<React.ElementRef<"div">, TodoProps>(function TodoComponent(
+  { todo, className, ...props },
+  ref,
+) {
+  const toggleTodoMutation = useToggleTodoMutation({
+    columnId: todo.idColumn,
+    todoId: todo.id,
+  })
+
+  const handleToggleTodo = async () => {
+    const input: HttpRequestToggleTodoPayload = {
+      body: {
+        isDone: !todo.isDone,
+      },
+      payload: {
+        todoId: todo.id,
+        userId,
+      },
+    }
+
+    await toggleTodoMutation.mutateAsync(input)
+  }
+
+  return (
+    <div
+      {...props}
+      className={cn("flex bg-zinc-900 p-2 [&:not(:last-child)]:border-b border-zinc-800", className)}
+      ref={ref}
+    >
+      <Checkbox.Root
+        className="size-6 bg-slate-800 border border-slate-700"
+        defaultChecked={todo.isDone}
+        onCheckedChange={handleToggleTodo}
+        disabled={toggleTodoMutation.isPending}
+      >
+        <Checkbox.Indicator className="grid place-items-center">
+          <CheckIcon className="size-5" />
+        </Checkbox.Indicator>
+      </Checkbox.Root>
+      <p className="pl-2">{todo.text}</p>
+    </div>
+  )
+})
+
+Todo.displayName = "Todo"
+
+export type ContainerProps = React.ComponentPropsWithoutRef<"section"> & {}
+
+export const Container = React.forwardRef<React.ElementRef<"section">, ContainerProps>(
+  function ContainerComponent({ className, ...props }, ref) {
+    return (
+      <section
+        {...props}
+        className={cn("mx-auto max-w-[1440px] px-12", className)}
+        ref={ref}
+      />
+    )
+  },
+)
+
+Container.displayName = "Container"
