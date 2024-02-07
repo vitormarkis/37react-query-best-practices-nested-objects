@@ -11,13 +11,13 @@ type UseAddColumnMutationProps = {
 export function useAddColumnMutation({ userId }: UseAddColumnMutationProps) {
   const queryClient = useQueryClient()
 
-  return useMutation<ColumnSession, DefaultError, HttpRequestAddColumnPayload>({
+  return useMutation<void, DefaultError, HttpRequestAddColumnPayload>({
     mutationKey: ECacheKeys.mutation.addColumn(userId),
     mutationFn: (...args) => httpRequestAddColumn(...args),
-    onSuccess(newColumn) {
+    onSuccess(_, variables) {
       queryClient.setQueryData<UserSession>(ECacheKeys.user(userId), userSession => {
         return produce(userSession, draft => {
-          draft?.columns.push(newColumn)
+          draft?.columns.push(variables)
         })
       })
     },

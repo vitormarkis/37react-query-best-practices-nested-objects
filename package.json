@@ -20,7 +20,6 @@
     "@types/react": "18.2.52",
     "@types/react-dom": "18.2.18",
     "autoprefixer": "10.4.17",
-    "axios": "^1.6.7",
     "clsx": "^2.1.0",
     "immer": "^10.0.3",
     "lodash": "^4.17.21",

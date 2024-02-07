@@ -10,6 +10,7 @@ export type HttpRequestAddColumnPayload = {
 
 export async function httpRequestAddColumn(payload: HttpRequestAddColumnPayload) {
   await sleep(1)
-  const response = await api.post<ColumnSession>(`/columns`, payload)
-  return response.data
+  // const response = await api.post<ColumnSession>(`/columns`, payload)
+  // return response.data
+  return
 }

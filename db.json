@@ -360,7 +360,7 @@
     {
       "id": "1c2a14b1-c95d-4f4e-9c7a-c192901f5336",
       "idColumn": "a8fe7dc9-445d-4d9c-8ab6-ed65e4916e77",
-      "isDone": false,
+      "isDone": true,
       "text": "proccess"
     },
     {
@@ -642,7 +642,7 @@
     {
       "id": "540b5978-d160-4a86-a29b-7f4fabfd6cc7",
       "idColumn": "a6718634-beb1-4352-a089-35ae072649b0",
-      "isDone": false,
+      "isDone": true,
       "text": "moment"
     },
     {
@@ -678,7 +678,7 @@
     {
       "id": "ea5faec4-8bba-463d-9ec0-3f578322de3e",
       "idColumn": "aace83ab-c425-477b-9c6c-2b1cf69e498b",
-      "isDone": false,
+      "isDone": true,
       "text": "7ry9agsgdpq"
     },
     {
@@ -720,7 +720,7 @@
     {
       "id": "723728ec-315f-453f-90d7-6dd21ae758c8",
       "idColumn": "f1f0b04c-8e56-444f-a7b7-8f4c04ae3682",
-      "isDone": false,
+      "isDone": true,
       "text": "pe3enp3eb4j"
     },
     {
@@ -756,7 +756,7 @@
     {
       "id": "5203d418-30ee-45d7-ab9c-fb7232cdc2dd",
       "idColumn": "88fef297-88b2-442f-b60b-db666cbe8164",
-      "isDone": false,
+      "isDone": true,
       "text": "yrv04a3pmjk"
     },
     {
@@ -780,7 +780,7 @@
     {
       "id": "98ca10e7-935c-4b6d-b749-7fb4b483d0aa",
       "idColumn": "f1f0b04c-8e56-444f-a7b7-8f4c04ae3682",
-      "isDone": true,
+      "isDone": false,
       "text": "pavocipxs4"
     },
     {
@@ -798,13 +798,13 @@
     {
       "id": "5b7b3d21-4744-43d5-98ad-ab98dddc2e84",
       "idColumn": "f1f0b04c-8e56-444f-a7b7-8f4c04ae3682",
-      "isDone": true,
+      "isDone": false,
       "text": "s1gake4msuo"
     },
     {
       "id": "50849e23-0624-4de0-8adf-393a1704d194",
       "idColumn": "f1f0b04c-8e56-444f-a7b7-8f4c04ae3682",
-      "isDone": true,
+      "isDone": false,
       "text": "6g6a0qln0m2"
     },
     {

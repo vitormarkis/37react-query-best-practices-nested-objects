@@ -68,7 +68,8 @@ export const ColumnList = React.forwardRef<React.ElementRef<"div">, ColumnListPr
       >
         {user.columns.map(column => (
           <Column
-            column={column}
+            columnId={column.id}
+            // column={column}
             key={column.id}
           />
         ))}

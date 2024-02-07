@@ -1,13 +1,11 @@
-import React, { useState } from "react"
-import { cn } from "@/lib/utils"
-import * as Dialog from "@radix-ui/react-dialog"
 import { Button } from "@/components/button"
-import { useTodo } from "@/entities/todo/hooks/useTodo"
-import { useChangeTextTodoMutation } from "../mutation"
-import { useColumn } from "@/entities/column/hooks/useColumn"
-import { HttpRequestChangeTextTodoPayload } from "../httpRequest"
+import { cn } from "@/lib/utils"
 import { userId } from "@/pages"
+import * as Dialog from "@radix-ui/react-dialog"
+import React, { useState } from "react"
 import { toast } from "sonner"
+import { HttpRequestChangeTextTodoPayload } from "../httpRequest"
+import { useChangeTextTodoMutation } from "../mutation"
 
 export type TodoChangeTextModalProps = React.ComponentPropsWithoutRef<typeof Dialog.Content> & {
   children: React.ReactNode
@@ -17,9 +15,12 @@ export const TodoChangeTextModal = React.forwardRef<
   React.ElementRef<typeof Dialog.Content>,
   TodoChangeTextModalProps
 >(function TodoChangeTextModalComponent({ children, className, ...props }, ref) {
-  const columnId = useColumn(state => state.id)
-  const todoId = useTodo(state => state.id)
-  const todoText = useTodo(state => state.text)
+  // const columnId = useColumn(state => state.id)
+  // const todoId = useTodo(state => state.id)
+  // const todoText = useTodo(state => state.text)
+  const columnId = ""
+  const todoId = ""
+  const todoText = ""
   const [text, setText] = useState(todoText)
   const [isModalOpen, setIsModalOpen] = useState(false)
 

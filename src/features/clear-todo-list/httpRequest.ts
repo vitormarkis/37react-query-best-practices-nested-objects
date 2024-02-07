@@ -12,8 +12,9 @@ export type HttpRequestClearTodoListPayload = {
 
 export async function httpRequestClearTodoList({ payload }: HttpRequestClearTodoListPayload) {
   await sleep(0.2)
-  const todos = await getTodos(payload.columnId)
-  await Promise.all(todos.map(todo => api.delete(`/todos/${todo.id}`)))
-  const responseGetColumn = await getColumn(payload.columnId)
-  return responseGetColumn
+  // const todos = await getTodos(payload.columnId)
+  // await Promise.all(todos.map(todo => api.delete(`/todos/${todo.id}`)))
+  // const responseGetColumn = await getColumn(payload.columnId)
+  // return responseGetColumn
+  return
 }

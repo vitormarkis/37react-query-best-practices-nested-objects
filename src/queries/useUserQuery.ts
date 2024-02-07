@@ -1,39 +1,40 @@
-import { getColumn } from "@/gateway/columns"
-import { ColumnSessionAPI, UserSession, UserSessionAPI } from "@/interfaces/UserSession"
+import { UserSession } from "@/interfaces/UserSession"
 import { ECacheKeys } from "@/keys"
-import { api } from "@/services/api"
-import { useQuery } from "@tanstack/react-query"
+import { UndefinedInitialDataOptions, useQuery } from "@tanstack/react-query"
 import { useDebugValue } from "react"
+import { USER_RESPONSE } from "./CONST_user_response"
 
 type UseUserQueryProps = {
   userId: string
 }
 
-export function useUserQuery({ userId }: UseUserQueryProps) {
-  const query = useQuery<UserSession>({
+export function useUserQuery<TData = UserSession>(
+  { userId }: UseUserQueryProps,
+  options = {} as Omit<UndefinedInitialDataOptions<UserSession, Error, TData>, "queryKey">,
+) {
+  const query = useQuery<UserSession, Error, TData>({
     queryKey: ECacheKeys.user(userId),
-    async queryFn() {
-      const [userAPI, columnsListAPI] = await Promise.all([
-        api.get<UserSessionAPI>(`/users/${userId}`).then(res => res.data),
-        api.get<ColumnSessionAPI[]>(`/columns?idOwner=${userId}`).then(res => res.data),
-      ])
-
-      const columnListPromise = columnsListAPI.map(async column => {
-        return getColumn(column.id)
-      })
-
-      const columns = await Promise.all(columnListPromise)
-
-      const user: UserSession = {
-        ...userAPI,
-        columns,
-      }
-
-      return Promise.resolve(user)
-    },
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
+    queryFn: () => fetchUserSession(userId),
+    structuralSharing: true,
+    ...options,
   })
   useDebugValue(query)
   return query
+}
+
+async function fetchUserSession(userId: string) {
+  // const [userAPI, columnsListAPI] = await Promise.all([
+  //   api.get<UserSessionAPI>(`/users/${userId}`).then(res => res.data),
+  //   api.get<ColumnSessionAPI[]>(`/columns?idOwner=${userId}`).then(res => res.data),
+  // ])
+
+  // const columnListPromise = columnsListAPI.map(async column => {
+  //   return getColumn(column.id)
+  // })
+
+  // const columns = await Promise.all(columnListPromise)
+
+  const user = USER_RESPONSE
+
+  return Promise.resolve(user)
 }

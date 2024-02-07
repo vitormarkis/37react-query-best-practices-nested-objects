@@ -1,4 +1,4 @@
-import { TodoSession, UserSession } from "@/interfaces/UserSession"
+import { ColumnSession, TodoSession, UserSession } from "@/interfaces/UserSession"
 import { ECacheKeys } from "@/keys"
 import { DefaultError, useMutation, useQueryClient } from "@tanstack/react-query"
 import { produce } from "immer"
@@ -12,18 +12,42 @@ type UseToggleTodoMutationProps = {
 export function useToggleTodoMutation({ columnId, todoId }: UseToggleTodoMutationProps) {
   const queryClient = useQueryClient()
 
-  return useMutation<TodoSession, DefaultError, HttpRequestToggleTodoPayload>({
+  return useMutation<void, DefaultError, HttpRequestToggleTodoPayload>({
     mutationKey: ECacheKeys.mutation.toggleTodo(todoId),
     mutationFn: (...args) => httpRequestToggleTodo(...args),
-    onSuccess(newTodo, variables) {
+    onSuccess(_, variables) {
       queryClient.setQueryData<UserSession>(ECacheKeys.user(variables.payload.userId), userSession => {
-        return produce(userSession, draft => {
-          const user = draft!
-          const column = user.columns.find(c => c.id === columnId)!
-          const todo = column.todos.find(t => t.id === todoId)!
-          todo.isDone = newTodo.isDone
+        if (!userSession) throw new Error("")
+
+        const columns: ColumnSession[] = userSession.columns.map(column => {
+          if (column.id !== columnId) return column
+
+          const todos: TodoSession[] = column.todos.map(todo =>
+            todo.id === todoId
+              ? {
+                  ...todo,
+                  isDone: variables.body.isDone,
+                }
+              : todo,
+          )
+          return {
+            ...column,
+            todos,
+          }
         })
+
+        return {
+          ...userSession,
+          columns,
+        }
       })
     },
   })
 }
+
+// THIS MAY COME HANDY
+// return produce(userSession, user => {
+//   const column = user!.columns.find(c => c.id === columnId)!
+//   const todo = column.todos.find(t => t.id === todoId)!
+//   todo.isDone = variables.body.isDone
+// })

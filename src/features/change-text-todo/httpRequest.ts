@@ -16,6 +16,7 @@ type HttpRequestChangeTextTodoBody = {
 
 export async function httpRequestChangeTextTodo({ body, payload }: HttpRequestChangeTextTodoPayload) {
   await sleep(5)
-  const response = await api.patch<TodoSession>(`/todos/${payload.todoId}`, body)
-  return response.data
+  // const response = await api.patch<TodoSession>(`/todos/${payload.todoId}`, body)
+  // return response.data
+  return
 }
