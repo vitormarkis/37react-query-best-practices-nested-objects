@@ -4,23 +4,22 @@ import { useToggleTodoMutation } from "@/features/toggle-todo/mutation"
 import { ECacheKeys } from "@/keys"
 import { cn } from "@/lib/utils"
 import { userId } from "@/pages"
-import { useUserQuery } from "@/queries/useUserQuery"
 import * as Checkbox from "@radix-ui/react-checkbox"
 import { CheckIcon } from "@radix-ui/react-icons"
 import { useMutationState } from "@tanstack/react-query"
 import React from "react"
 import { Button } from "./button"
-import { IconPencil } from "./icons/IconPencil"
+import { useColumnId } from "./column.provider"
 import { useTodo } from "./hooks/useTodo"
+import { IconPencil } from "./icons/IconPencil"
+import { TodoIdProvider, useTodoId } from "./todo.provider"
 
 export type TodoProps = React.ComponentPropsWithoutRef<"div"> & {
-  userId: string
   todoId: string
-  columnId: string
 }
 
 const Todo = React.forwardRef<React.ElementRef<"div">, TodoProps>(function TodoComponent(
-  { userId, columnId, todoId, className, ...props },
+  { todoId, className, ...props },
   ref,
 ) {
   const [changeTextTodoMutation] = useMutationState({
@@ -33,43 +32,36 @@ const Todo = React.forwardRef<React.ElementRef<"div">, TodoProps>(function TodoC
   const changeTextTodoMutationIsPending = !!changeTextTodoMutation
 
   return (
-    <div
-      {...props}
-      className={cn(
-        "flex items-center bg-zinc-900 p-2 [&:not(:last-child)]:border-b border-zinc-800",
-        className,
-      )}
-      ref={ref}
-    >
-      <TodoToggle
-        columnId={columnId}
-        todoId={todoId}
-      />
-      {/* {true ? ( */}
-      {changeTextTodoMutationIsPending ? (
-        <div className="ml-2 h-5 bg-slate-700 animate-pulse w-full rounded-sm" />
-      ) : (
-        <TodoText
-          columnId={columnId}
-          todoId={todoId}
-        />
-      )}
-      <div className="ml-auto">
-        <div className="pl-6 flex items-center gap-0.5">
-          <TodoChangeTextModal
-            columnId={columnId}
-            todoId={todoId}
-          >
-            <Button
-              size="icon"
-              className="group"
-            >
-              <IconPencil className="size-3 duration-100 text-zinc-500 group-hover:text-white" />
-            </Button>
-          </TodoChangeTextModal>
+    <TodoIdProvider todoId={todoId}>
+      <div
+        {...props}
+        className={cn(
+          "flex items-center bg-zinc-900 p-2 [&:not(:last-child)]:border-b border-zinc-800",
+          className,
+        )}
+        ref={ref}
+      >
+        <TodoToggle />
+        {/* {true ? ( */}
+        {changeTextTodoMutationIsPending ? (
+          <div className="ml-2 h-5 bg-slate-700 animate-pulse w-full rounded-sm" />
+        ) : (
+          <TodoText />
+        )}
+        <div className="ml-auto">
+          <div className="pl-6 flex items-center gap-0.5">
+            <TodoChangeTextModal>
+              <Button
+                size="icon"
+                className="group"
+              >
+                <IconPencil className="size-3 duration-100 text-zinc-500 group-hover:text-white" />
+              </Button>
+            </TodoChangeTextModal>
+          </div>
         </div>
       </div>
-    </div>
+    </TodoIdProvider>
   )
 })
 
@@ -77,12 +69,10 @@ Todo.displayName = "Todo"
 
 export { Todo }
 
-export type TodoToggleProps = {
-  columnId: string
-  todoId: string
-}
+function TodoToggle() {
+  const todoId = useTodoId()
+  const columnId = useColumnId()
 
-function TodoToggle({ columnId, todoId }: TodoToggleProps) {
   const { data: isDone } = useTodo(
     {
       columnId,
@@ -127,12 +117,9 @@ function TodoToggle({ columnId, todoId }: TodoToggleProps) {
 
 TodoToggle.displayName = "TodoToggle"
 
-export type TodoTextProps = {
-  columnId: string
-  todoId: string
-}
-
-function TodoText({ columnId, todoId }: TodoTextProps) {
+function TodoText() {
+  const todoId = useTodoId()
+  const columnId = useColumnId()
   const { data: text } = useTodo(
     {
       columnId,

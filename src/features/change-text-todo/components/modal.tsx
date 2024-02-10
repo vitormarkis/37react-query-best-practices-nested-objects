@@ -7,17 +7,19 @@ import { HttpRequestChangeTextTodoPayload } from "../httpRequest"
 import { userId } from "@/pages"
 import { toast } from "sonner"
 import { useTodo } from "@/components/hooks/useTodo"
+import { useColumnId } from "@/components/column.provider"
+import { useTodoId } from "@/components/todo.provider"
 
 export type TodoChangeTextModalProps = React.ComponentPropsWithoutRef<typeof Dialog.Content> & {
-  todoId: string
-  columnId: string
   children: React.ReactNode
 }
 
 export const TodoChangeTextModal = React.forwardRef<
   React.ElementRef<typeof Dialog.Content>,
   TodoChangeTextModalProps
->(function TodoChangeTextModalComponent({ children, columnId, todoId, className, ...props }, ref) {
+>(function TodoChangeTextModalComponent({ children, className, ...props }, ref) {
+  const columnId = useColumnId()
+  const todoId = useTodoId()
   const { data: todoText } = useTodo({ userId, todoId, columnId }, todo => todo.text)
   const [text, setText] = useState(todoText!)
   const [isModalOpen, setIsModalOpen] = useState(false)

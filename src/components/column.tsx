@@ -12,6 +12,11 @@ import { userId } from "@/pages"
 import React from "react"
 import { toast } from "sonner"
 import { TodoList } from "./todo-list"
+import { ColumnIdProvider, useColumnId } from "./column.provider"
+import { useQueryClient } from "@tanstack/react-query"
+import { ECacheKeys } from "@/keys"
+import { produce } from "immer"
+import { UserSession } from "@/interfaces/UserSession"
 
 export type ColumnProps = React.ComponentPropsWithoutRef<"div"> & {
   columnId: string
@@ -54,48 +59,52 @@ const Column = React.forwardRef<React.ElementRef<"div">, ColumnProps>(function C
   }
 
   return (
-    <div
-      {...props}
-      className={cn("flex flex-col p-0.5 bg-zinc-800 min-w-[13rem]", className)}
-      ref={ref}
-    >
-      <div className="pl-2 flex">
-        <div>
-          <span className="text-sm">{columnId.slice(0, 6)}...</span>
+    <ColumnIdProvider columnId={columnId}>
+      <div
+        {...props}
+        className={cn("flex flex-col p-0.5 bg-zinc-800 min-w-[13rem]", className)}
+        ref={ref}
+      >
+        <div className="pl-2 flex">
+          <div>
+            <span className="text-sm">{columnId.slice(0, 6)}...</span>
+          </div>
+          <div className="ml-auto flex gap-1">
+            <Button
+              disabled={clearTodoListMutation.isPending}
+              onClick={handleClearTodoList}
+              size="icon"
+            >
+              <IconBrush className="size-3" />
+            </Button>
+            <Button
+              disabled={removeColumnMutation.isPending}
+              onClick={handleRemoveColumn}
+              size="icon"
+              color="destructive"
+            >
+              <IconX className="size-3" />
+            </Button>
+          </div>
         </div>
-        <div className="ml-auto flex gap-1">
-          <Button
-            disabled={clearTodoListMutation.isPending}
-            onClick={handleClearTodoList}
-            size="icon"
-          >
-            <IconBrush className="size-3" />
-          </Button>
-          <Button
-            disabled={removeColumnMutation.isPending}
-            onClick={handleRemoveColumn}
-            size="icon"
-            color="destructive"
-          >
-            <IconX className="size-3" />
-          </Button>
+        <div className="pt-0.5">
+          <TodoList />
+        </div>
+        <div className="mt-auto">
+          <div className="pt-1">
+            <ColumnAddTodo />
+            <ColumnClearTodoListCache />
+          </div>
         </div>
       </div>
-      <div className="pt-0.5">
-        <TodoList columnId={columnId} />
-      </div>
-      <div className="mt-auto">
-        <div className="pt-1">
-          <ColumnAddTodo columnId={columnId} />
-        </div>
-      </div>
-    </div>
+    </ColumnIdProvider>
   )
 })
 
 Column.displayName = "Column"
 
-const ColumnAddTodo: React.FC<{ columnId: string }> = ({ columnId }) => {
+const ColumnAddTodo: React.FC = () => {
+  const columnId = useColumnId()
   const addTodoMutation = useAddTodoMutation({
     columnId,
   })
@@ -128,6 +137,30 @@ const ColumnAddTodo: React.FC<{ columnId: string }> = ({ columnId }) => {
       color="colorless"
     >
       Add Todo
+    </Button>
+  )
+}
+
+const ColumnClearTodoListCache: React.FC = () => {
+  const columnId = useColumnId()
+  const queryClient = useQueryClient()
+
+  const handleClearTodoListCache = async () => {
+    queryClient.setQueryData<UserSession>(ECacheKeys.user(userId), userCache => {
+      return produce(userCache, user => {
+        const column = user?.columns.find(c => c.id === columnId)
+        column!.todos = []
+      })
+    })
+  }
+
+  return (
+    <Button
+      onClick={handleClearTodoListCache}
+      variant="todo-list"
+      color="colorless"
+    >
+      Clear Todo list on cache
     </Button>
   )
 }

@@ -4,15 +4,15 @@ import { useUserQuery } from "@/queries/useUserQuery"
 import { userId } from "@/pages"
 import { Todo } from "./todo"
 import { useColumn } from "./hooks/useColumn"
+import { useColumnId } from "./column.provider"
 
-export type TodoListProps = React.ComponentPropsWithoutRef<"ul"> & {
-  columnId: string
-}
+export type TodoListProps = React.ComponentPropsWithoutRef<"ul"> & {}
 
 export const TodoList = React.forwardRef<React.ElementRef<"ul">, TodoListProps>(function TodoListComponent(
-  { columnId, className, ...props },
+  { className, ...props },
   ref,
 ) {
+  const columnId = useColumnId()
   const { data: todoIdList } = useColumn({ userId, columnId }, column => column.todos.map(t => t.id))
 
   if (!todoIdList) return <h1>No todo list found with column id {columnId}</h1>
@@ -26,8 +26,6 @@ export const TodoList = React.forwardRef<React.ElementRef<"ul">, TodoListProps>(
       {todoIdList.map(id => (
         <Todo
           key={id}
-          columnId={columnId}
-          userId={userId}
           todoId={id}
         />
       ))}
