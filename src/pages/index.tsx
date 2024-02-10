@@ -54,9 +54,14 @@ export type ColumnListProps = React.ComponentPropsWithoutRef<"div"> & {}
 
 export const ColumnList = React.forwardRef<React.ElementRef<"div">, ColumnListProps>(
   function ColumnListComponent({ className, ...props }, ref) {
-    const { data: user } = useUserQuery({ userId })
+    const { data: columnIdList } = useUserQuery<string[]>(
+      { userId },
+      {
+        select: user => user.columns.map(c => c.id),
+      },
+    )
 
-    if (!user) {
+    if (!columnIdList) {
       return <div>Loading...</div>
     }
 
@@ -66,10 +71,10 @@ export const ColumnList = React.forwardRef<React.ElementRef<"div">, ColumnListPr
         className={cn("flex flex-wrap gap-8 ", className)}
         ref={ref}
       >
-        {user.columns.map(column => (
+        {columnIdList.map(columnId => (
           <Column
-            column={column}
-            key={column.id}
+            columnId={columnId}
+            key={columnId}
           />
         ))}
       </div>

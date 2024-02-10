@@ -2,25 +2,24 @@ import React, { useState } from "react"
 import { cn } from "@/lib/utils"
 import * as Dialog from "@radix-ui/react-dialog"
 import { Button } from "@/components/button"
-import { useTodo } from "@/entities/todo/hooks/useTodo"
 import { useChangeTextTodoMutation } from "../mutation"
-import { useColumn } from "@/entities/column/hooks/useColumn"
 import { HttpRequestChangeTextTodoPayload } from "../httpRequest"
 import { userId } from "@/pages"
 import { toast } from "sonner"
+import { useTodo } from "@/components/hooks/useTodo"
 
 export type TodoChangeTextModalProps = React.ComponentPropsWithoutRef<typeof Dialog.Content> & {
+  todoId: string
+  columnId: string
   children: React.ReactNode
 }
 
 export const TodoChangeTextModal = React.forwardRef<
   React.ElementRef<typeof Dialog.Content>,
   TodoChangeTextModalProps
->(function TodoChangeTextModalComponent({ children, className, ...props }, ref) {
-  const columnId = useColumn(state => state.id)
-  const todoId = useTodo(state => state.id)
-  const todoText = useTodo(state => state.text)
-  const [text, setText] = useState(todoText)
+>(function TodoChangeTextModalComponent({ children, columnId, todoId, className, ...props }, ref) {
+  const { data: todoText } = useTodo({ userId, todoId, columnId }, todo => todo.text)
+  const [text, setText] = useState(todoText!)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const changeTextTodoMutation = useChangeTextTodoMutation({
@@ -40,15 +39,20 @@ export const TodoChangeTextModal = React.forwardRef<
     }
 
     setIsModalOpen(false)
-    const response = await changeTextTodoMutation.mutateAsync(input)
-    console.log({ response })
-    toast.success("Change text successfully.")
+    changeTextTodoMutation.mutate(input, {
+      onSuccess() {
+        toast.success("Change text successfully.")
+      },
+    })
   }
 
   return (
     <Dialog.Root
       open={isModalOpen}
-      onOpenChange={setIsModalOpen}
+      onOpenChange={e => {
+        setIsModalOpen(e)
+        setText(todoText!)
+      }}
     >
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
       <Dialog.Portal>
