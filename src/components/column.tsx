@@ -38,9 +38,12 @@ const Column = React.forwardRef<React.ElementRef<"div">, ColumnProps>(function C
       },
     }
 
-    const response = await clearTodoListMutation.mutateAsync(input)
-    console.log({ response })
-    toast.success("Coluna limpa.")
+    clearTodoListMutation.mutate(input, {
+      onSuccess(response) {
+        console.log({ response })
+        toast.success("Coluna limpa.")
+      },
+    })
   }
 
   const removeColumnMutation = useRemoveColumnMutation({
@@ -53,9 +56,12 @@ const Column = React.forwardRef<React.ElementRef<"div">, ColumnProps>(function C
       idColumn: columnId,
     }
 
-    const response = await removeColumnMutation.mutateAsync(input)
-    console.log({ response })
-    toast.success("Coluna removida.")
+    removeColumnMutation.mutate(input, {
+      onSuccess(response) {
+        console.log({ response })
+        toast.success("Coluna removida.")
+      },
+    })
   }
 
   return (

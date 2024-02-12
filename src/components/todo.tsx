@@ -98,7 +98,7 @@ function TodoToggle() {
       },
     }
 
-    await toggleTodoMutation.mutateAsync(input)
+    toggleTodoMutation.mutate(input)
   }
 
   return (

@@ -24,9 +24,12 @@ export default function Home() {
       idOwner: userId,
     }
 
-    const response = await addColumnMutation.mutateAsync(input)
-    console.log({ response })
-    toast.success("Coluna adicionada.")
+    addColumnMutation.mutate(input, {
+      onSuccess(response) {
+        console.log({ response })
+        toast.success("Coluna adicionada.")
+      },
+    })
   }
 
   return (

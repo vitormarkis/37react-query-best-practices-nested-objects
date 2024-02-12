@@ -12,11 +12,6 @@
       "id": "a6718634-beb1-4352-a089-35ae072649b0"
     },
     {
-      "id": "88fef297-88b2-442f-b60b-db666cbe8164",
-      "todos": [],
-      "idOwner": "ef499b10-d774-4a13-b585-7e29541430cc"
-    },
-    {
       "id": "f1f0b04c-8e56-444f-a7b7-8f4c04ae3682",
       "todos": [],
       "idOwner": "ef499b10-d774-4a13-b585-7e29541430cc"
@@ -776,12 +771,6 @@
       "text": "a24aer9dno"
     },
     {
-      "id": "8f1f74cf-fef0-48af-8cac-f7287bc7a6a4",
-      "idColumn": "aace83ab-c425-477b-9c6c-2b1cf69e498b",
-      "isDone": true,
-      "text": "r14fh24uhn"
-    },
-    {
       "id": "277adc2e-1c60-4324-aa3b-87a8a3c4f29d",
       "idColumn": "88fef297-88b2-442f-b60b-db666cbe8164",
       "isDone": false,
@@ -792,12 +781,6 @@
       "idColumn": "f1f0b04c-8e56-444f-a7b7-8f4c04ae3682",
       "isDone": true,
       "text": "49pu1bogieq"
-    },
-    {
-      "id": "e1659f8b-4c50-4df5-92de-7a1dfa4f5c50",
-      "idColumn": "aace83ab-c425-477b-9c6c-2b1cf69e498b",
-      "isDone": true,
-      "text": "6w4lcm4fuyu"
     },
     {
       "id": "37a592b4-714c-416b-a58a-01b7fd7989c8",
@@ -818,28 +801,10 @@
       "text": "ce1txmtcle"
     },
     {
-      "id": "d0e3f10d-23b7-435e-88dd-acd22d85e32e",
-      "idColumn": "aace83ab-c425-477b-9c6c-2b1cf69e498b",
-      "isDone": true,
-      "text": "mrks"
-    },
-    {
       "id": "6395a963-dd5b-4984-bb67-e6c42a8b0e98",
       "idColumn": "88fef297-88b2-442f-b60b-db666cbe8164",
       "isDone": false,
       "text": "3hrnaukxlsn"
-    },
-    {
-      "id": "24b6b966-a879-4c9e-98d7-6a5801a4a551",
-      "idColumn": "aace83ab-c425-477b-9c6c-2b1cf69e498b",
-      "isDone": true,
-      "text": "4xxg48uca8h"
-    },
-    {
-      "id": "acd327d2-456f-400a-aeea-b50276fa1ef3",
-      "idColumn": "aace83ab-c425-477b-9c6c-2b1cf69e498b",
-      "isDone": true,
-      "text": "8vdmkbphs66"
     },
     {
       "id": "70255108-56d7-449d-8d84-0819ee8fa480",
