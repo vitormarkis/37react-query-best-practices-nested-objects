@@ -77,7 +77,6 @@ function TodoToggle() {
     {
       columnId,
       todoId,
-      userId,
     },
     todo => todo.isDone,
   )
@@ -124,16 +123,9 @@ function TodoText() {
     {
       columnId,
       todoId,
-      userId,
     },
     todo => todo.text,
   )
-  // const { data: text } = useUserQuery(
-  //   { userId },
-  //   {
-  //     select: user => user.columns.find(c => c.id === columnId)!.todos.find(t => t.id === todoId)!.text,
-  //   },
-  // )
 
   return <p className="pl-2 text-sm">{text}</p>
 }

@@ -14,10 +14,10 @@ export function useAddColumnMutation({ userId }: UseAddColumnMutationProps) {
   return useMutation<ColumnSession, DefaultError, HttpRequestAddColumnPayload>({
     mutationKey: ECacheKeys.mutation.addColumn(userId),
     mutationFn: (...args) => httpRequestAddColumn(...args),
-    onSuccess(newColumn) {
+    onSuccess(_, variables) {
       queryClient.setQueryData<UserSession>(ECacheKeys.user(userId), userSession => {
         return produce(userSession, draft => {
-          draft?.columns.push(newColumn)
+          draft?.columns.push(variables)
         })
       })
     },

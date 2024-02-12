@@ -15,13 +15,13 @@ export function useToggleTodoMutation({ columnId, todoId }: UseToggleTodoMutatio
   return useMutation<TodoSession, DefaultError, HttpRequestToggleTodoPayload>({
     mutationKey: ECacheKeys.mutation.toggleTodo(todoId),
     mutationFn: (...args) => httpRequestToggleTodo(...args),
-    onSuccess(newTodo, variables) {
+    onSuccess(_, variables) {
       queryClient.setQueryData<UserSession>(ECacheKeys.user(variables.payload.userId), userSession => {
         return produce(userSession, draft => {
           const user = draft!
           const column = user.columns.find(c => c.id === columnId)!
           const todo = column.todos.find(t => t.id === todoId)!
-          todo.isDone = newTodo.isDone
+          todo.isDone = variables.body.isDone
         })
       })
     },

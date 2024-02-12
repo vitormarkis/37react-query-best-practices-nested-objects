@@ -13,9 +13,8 @@ export const TodoList = React.forwardRef<React.ElementRef<"ul">, TodoListProps>(
   ref,
 ) {
   const columnId = useColumnId()
-  const { data: todoIdList } = useColumn({ userId, columnId }, column => column.todos.map(t => t.id))
-
-  if (!todoIdList) return <h1>No todo list found with column id {columnId}</h1>
+  const { data: todoIdList } = useColumn({ columnId }, column => column.todos.map(t => t.id))
+  console.log({ todoIdList })
 
   return (
     <ul

@@ -14,12 +14,12 @@ export function useAddTodoMutation({ columnId }: UseAddTodoMutationProps) {
   return useMutation<TodoSession, DefaultError, HttpRequestAddTodoPayload>({
     mutationKey: ECacheKeys.mutation.addTodo(columnId),
     mutationFn: (...args) => httpRequestAddTodo(...args),
-    onSuccess(newTodo, variables) {
+    onSuccess(_, variables) {
       queryClient.setQueryData<UserSession>(ECacheKeys.user(variables.payload.userId), userSession => {
         return produce(userSession, draft => {
           const user = draft!
           const column = user.columns.find(c => c.id === columnId)!
-          column.todos.push(newTodo)
+          column.todos.push(variables.body)
         })
       })
     },

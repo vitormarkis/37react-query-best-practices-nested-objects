@@ -57,16 +57,11 @@ export type ColumnListProps = React.ComponentPropsWithoutRef<"div"> & {}
 
 export const ColumnList = React.forwardRef<React.ElementRef<"div">, ColumnListProps>(
   function ColumnListComponent({ className, ...props }, ref) {
-    const { data: columnIdList } = useUserQuery<string[]>(
-      { userId },
-      {
-        select: user => user.columns.map(c => c.id),
-      },
-    )
+    const { data: columnIdList } = useUserQuery<string[]>({
+      select: user => user.columns.map(c => c.id),
+    })
 
-    if (!columnIdList) {
-      return <div>Loading...</div>
-    }
+    console.log({ columnIdList })
 
     return (
       <div
